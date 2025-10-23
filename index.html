@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leerlijn Verbanden - Groep 1 t/m 8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .intro {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f1f3f5;
+            overflow-x: auto;
+            border-bottom: 3px solid #667eea;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 0 1 auto;
+            min-width: fit-content;
+            padding: 20px 25px;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+            border-right: 1px solid #dee2e6;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: #dee2e6;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 4px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .card {
+            perspective: 1000px;
+            height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+            border: 3px solid #667eea;
+            overflow-y: auto;
+        }
+
+        .card-front h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .card-front p {
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .card-back h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .card-back p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .example-image {
+            width: 100%;
+            max-width: 250px;
+            margin: 15px 0;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Kleurcodering per groep */
+        .groep1-2 .card-front { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); }
+        .groep3 .card-front { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); }
+        .groep4 .card-front { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .groep5 .card-front { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .groep6 .card-front { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .groep7 .card-front { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .groep7 .card-front h3, .groep7 .card-front p { color: #333; }
+        .groep8 .card-front { background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%); }
+
+        .groep1-2 .card-back { border-color: #ff6b6b; }
+        .groep3 .card-back { border-color: #4ecdc4; }
+        .groep4 .card-back { border-color: #f093fb; }
+        .groep5 .card-back { border-color: #fa709a; }
+        .groep6 .card-back { border-color: #30cfd0; }
+        .groep7 .card-back { border-color: #a8edea; }
+        .groep8 .card-back { border-color: #ff9a56; }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .source-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+        }
+
+        .photo-thumb:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            .tab-button { font-size: 0.9em; padding: 15px 10px; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Leerlijn Verbanden</h1>
+            <p>Groep 1 t/m 8 - Tabellen, Diagrammen, Grafieken & Patronen</p>
+        </header>
+
+        <div class="intro">
+            <h2>Welkom bij de Leerlijn Verbanden!</h2>
+            <p>In deze leerlijn leren kinderen stap voor stap om gegevens te ordenen, patronen te herkennen en informatie uit grafieken en tabellen te halen.</p>
+            <p><strong>Ontwikkeling door de jaren:</strong></p>
+            <p>🔴 <strong>Groep 1-3:</strong> Concrete, visuele patronen en eenvoudige diagrammen</p>
+            <p>🟡 <strong>Groep 4-5:</strong> Tabellen, bewerkingen met gegevens en complexere patronen</p>
+            <p>🟢 <strong>Groep 6-7:</strong> Lijngrafieken, cirkeldiagrammen, assenstelsels en formele wiskundetaal</p>
+            <p>🔵 <strong>Groep 8:</strong> Integratie van alle vaardigheden, zelfstandig construeren en kritisch analyseren</p>
+            <p style="margin-top: 15px; font-style: italic;">💡 Klik op een tegel om een voorbeeldsom te zien!</p>
+        </div>
+
+        <div class="tabs" style="flex-wrap: wrap;">
+            <!-- Rij 1: Groepen -->
+            <button class="tab-button active" onclick="openTab(event, 'groep1-2')" style="flex: 0 1 auto;">Groep 1-2</button>
+            <button class="tab-button" onclick="openTab(event, 'groep3')" style="flex: 0 1 auto;">Groep 3</button>
+            <button class="tab-button" onclick="openTab(event, 'groep4')" style="flex: 0 1 auto;">Groep 4</button>
+            <button class="tab-button" onclick="openTab(event, 'groep5')" style="flex: 0 1 auto;">Groep 5</button>
+            <button class="tab-button" onclick="openTab(event, 'groep6')" style="flex: 0 1 auto;">Groep 6</button>
+            <button class="tab-button" onclick="openTab(event, 'groep7')" style="flex: 0 1 auto;">Groep 7</button>
+            <button class="tab-button" onclick="openTab(event, 'groep8')" style="flex: 0 1 auto;">Groep 8</button>
+            
+            <!-- Scheidingslijn tussen rijen (volledige breedte) -->
+            <div style="flex-basis: 100%; height: 0;"></div>
+            
+            <!-- Rij 2: Andere tabs -->
+            <button class="tab-button" onclick="openTab(event, 'grafieken')" style="flex: 0 1 auto;">Grafieken</button>
+            <button class="tab-button" onclick="openTab(event, 'leerprincipes')" style="flex: 0 1 auto;">Leerprincipes</button>
+            <button class="tab-button" onclick="openTab(event, 'leerlingenwerk')" style="flex: 0 1 auto;">Leerlingenwerk</button>
+            <button class="tab-button" onclick="openTab(event, 'bronnen')" style="flex: 0 1 auto;">Bronnen</button>
+        </div>
+
+        <!-- GROEP 1-2 -->
+        <div id="groep1-2" class="tab-content active">
+            <h2 style="color: #ff6b6b; margin-bottom: 20px;">Groep 1-2: Concrete visuele start</h2>
+            <div class="cards-grid groep1-2">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🖼️ Beelddiagram aflezen</h3>
+                            <p>Een beelddiagram met plaatjes aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Welk dier komt het meest voor?</p>
+                            <svg width="200" height="120" viewBox="0 0 200 120">
+                                <text x="10" y="30" font-size="24">🐶</text>
+                                <text x="40" y="30" font-size="24">🐶</text>
+                                <text x="70" y="30" font-size="24">🐶</text>
+                                <text x="100" y="30" font-size="24">🐶</text>
+                                
+                                <text x="10" y="60" font-size="24">🐱</text>
+                                <text x="40" y="60" font-size="24">🐱</text>
+                                
+                                <text x="10" y="90" font-size="24">🐰</text>
+                                <text x="40" y="90" font-size="24">🐰</text>
+                                <text x="70" y="90" font-size="24">🐰</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> De hond komt 4 keer voor, dat is het meest!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📊 Staafdiagram maken</h3>
+                            <p>Een staafdiagram maken door hokjes in te kleuren</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Opdracht:</strong> Kleur het aantal speelgoedjes per kind in.</p>
+                            <svg width="220" height="140" viewBox="0 0 220 140">
+                                <!-- Grid -->
+                                <line x1="40" y1="20" x2="40" y2="120" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="120" x2="200" y2="120" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- Bars -->
+                                <rect x="50" y="70" width="35" height="50" fill="#ff6b6b"/>
+                                <rect x="95" y="45" width="35" height="75" fill="#4ecdc4"/>
+                                <rect x="140" y="95" width="35" height="25" fill="#f093fb"/>
+                                
+                                <!-- Labels -->
+                                <text x="65" y="135" font-size="10" text-anchor="middle">Lisa</text>
+                                <text x="110" y="135" font-size="10" text-anchor="middle">Tom</text>
+                                <text x="155" y="135" font-size="10" text-anchor="middle">Emma</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Tom heeft de meeste speelgoedjes (3 hokjes).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🔗 Patronen voortzetten</h3>
+                            <p>Eenvoudige patronen voortzetten</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Welke kleur komt hierna?</p>
+                            <svg width="200" height="60" viewBox="0 0 200 60">
+                                <circle cx="20" cy="30" r="12" fill="#ff6b6b"/>
+                                <circle cx="50" cy="30" r="12" fill="#4ecdc4"/>
+                                <circle cx="80" cy="30" r="12" fill="#f093fb"/>
+                                <circle cx="110" cy="30" r="12" fill="#ff6b6b"/>
+                                <circle cx="140" cy="30" r="12" fill="#4ecdc4"/>
+                                <text x="170" y="35" font-size="20">?</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Paars! Het patroon is: rood, blauw, paars.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 3 -->
+        <div id="groep3" class="tab-content">
+            <h2 style="color: #4ecdc4; margin-bottom: 20px;">Groep 3: Eerste grafische voorstellingen</h2>
+            <div class="cards-grid groep3">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>✍️ Gegevens turven</h3>
+                            <p>Gegevens uit een telling verwerken via turven</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Hoeveel kinderen kozen voor appel?</p>
+                            <svg width="200" height="100" viewBox="0 0 200 100">
+                                <text x="10" y="20" font-size="12" font-weight="bold">Appel:</text>
+                                <line x1="10" y1="35" x2="10" y2="55" stroke="#333" stroke-width="2"/>
+                                <line x1="20" y1="35" x2="20" y2="55" stroke="#333" stroke-width="2"/>
+                                <line x1="30" y1="35" x2="30" y2="55" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="35" x2="40" y2="55" stroke="#333" stroke-width="2"/>
+                                <line x1="5" y1="45" x2="45" y2="45" stroke="#333" stroke-width="2"/>
+                                
+                                <line x1="55" y1="35" x2="55" y2="55" stroke="#333" stroke-width="2"/>
+                                <line x1="65" y1="35" x2="65" y2="55" stroke="#333" stroke-width="2"/>
+                            </svg>
+                            <p><strong>Antwoord:</strong> 7 kinderen (5 + 2 streepjes)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🍎 Diagrammen aflezen</h3>
+                            <p>Een eenvoudig beelddiagram en staafdiagram aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Welk fruit is even populair als banaan?</p>
+                            <svg width="200" height="120" viewBox="0 0 200 120">
+                                <rect x="20" y="80" width="30" height="40" fill="#ff6b6b"/>
+                                <rect x="60" y="60" width="30" height="60" fill="#f093fb"/>
+                                <rect x="100" y="70" width="30" height="50" fill="#4ecdc4"/>
+                                
+                                <text x="35" y="130" font-size="10" text-anchor="middle">🍎</text>
+                                <text x="75" y="130" font-size="10" text-anchor="middle">🍌</text>
+                                <text x="115" y="130" font-size="10" text-anchor="middle">🍊</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Sinaasappel (🍊) heeft een even hoge staaf als banaan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🔷 Figuurpatronen herkennen</h3>
+                            <p>Patronen in eenvoudige figuren herkennen en voortzetten</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Welke figuur komt hierna?</p>
+                            <svg width="200" height="60" viewBox="0 0 200 60">
+                                <circle cx="20" cy="30" r="10" fill="none" stroke="#333" stroke-width="2"/>
+                                <rect x="45" y="20" width="20" height="20" fill="none" stroke="#333" stroke-width="2"/>
+                                <polygon points="85,20 95,40 75,40" fill="none" stroke="#333" stroke-width="2"/>
+                                
+                                <circle cx="115" cy="30" r="10" fill="none" stroke="#333" stroke-width="2"/>
+                                <rect x="140" y="20" width="20" height="20" fill="none" stroke="#333" stroke-width="2"/>
+                                <text x="180" y="35" font-size="18">?</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Een driehoek! Het patroon is: cirkel, vierkant, driehoek.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 4 -->
+        <div id="groep4" class="tab-content">
+            <h2 style="color: #f093fb; margin-bottom: 20px;">Groep 4: Tabellen en eerste bewerkingen</h2>
+            <div class="cards-grid groep4">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📋 Tabellen en diagrammen</h3>
+                            <p>Gegevens uit tabellen en staafdiagrammen aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Wat is het favoriete huisdier?</p>
+                            <svg width="220" height="140" viewBox="0 0 220 140">
+                                <line x1="40" y1="20" x2="40" y2="120" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="120" x2="200" y2="120" stroke="#333" stroke-width="2"/>
+                                
+                                <rect x="50" y="40" width="35" height="80" fill="#ff6b6b"/>
+                                <rect x="95" y="70" width="35" height="50" fill="#4ecdc4"/>
+                                <rect x="140" y="55" width="35" height="65" fill="#f093fb"/>
+                                
+                                <text x="67" y="135" font-size="10" text-anchor="middle">Hond</text>
+                                <text x="112" y="135" font-size="10" text-anchor="middle">Kat</text>
+                                <text x="157" y="135" font-size="10" text-anchor="middle">Vis</text>
+                                
+                                <text x="30" y="25" font-size="8">8</text>
+                                <text x="30" y="55" font-size="8">6</text>
+                                <text x="30" y="90" font-size="8">4</text>
+                                <text x="30" y="120" font-size="8">0</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Hond is het populairst met 8 stemmen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🏷️ Legenda aflezen</h3>
+                            <p>Een legenda aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Welke kleur staat voor groep 4B?</p>
+                            <svg width="200" height="120" viewBox="0 0 200 120">
+                                <rect x="20" y="60" width="30" height="50" fill="#ff6b6b"/>
+                                <rect x="60" y="40" width="30" height="70" fill="#4ecdc4"/>
+                                <rect x="100" y="50" width="30" height="60" fill="#f093fb"/>
+                                
+                                <rect x="20" y="20" width="12" height="12" fill="#ff6b6b"/>
+                                <text x="35" y="30" font-size="10">Groep 4A</text>
+                                
+                                <rect x="80" y="20" width="12" height="12" fill="#4ecdc4"/>
+                                <text x="95" y="30" font-size="10">Groep 4B</text>
+                                
+                                <rect x="140" y="20" width="12" height="12" fill="#f093fb"/>
+                                <text x="155" y="30" font-size="10">Groep 4C</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Blauw/groen staat voor groep 4B.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🔢 Getallenpatronen</h3>
+                            <p>Patronen voortzetten (1 - 3 - 5 - 7 - ...)</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> Wat zijn de volgende 3 getallen?</p>
+                            <p style="font-size: 1.3em; margin: 20px 0;">1 - 3 - 5 - 7 - 9 - ? - ? - ?</p>
+                            <p><strong>Antwoord:</strong> 11 - 13 - 15</p>
+                            <p style="font-size: 0.9em; margin-top: 10px;"><em>Het patroon: steeds +2 (oneven getallen)</em></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 5 -->
+        <div id="groep5" class="tab-content">
+            <h2 style="color: #fa709a; margin-bottom: 20px;">Groep 5: Meervoudige lijngrafieken introduceren</h2>
+            <div class="cards-grid groep5">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📈 Lijngrafiek aflezen</h3>
+                            <p>Lijngrafiek met één lijn aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom: Aantal geboren leeuwen</h4>
+                            <svg width="240" height="160" viewBox="0 0 240 160">
+                                <line x1="40" y1="20" x2="40" y2="140" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="140" x2="220" y2="140" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="40,100 75,80 110,60 145,90 180,50" fill="none" stroke="#fa709a" stroke-width="3"/>
+                                
+                                <circle cx="40" cy="100" r="4" fill="#fa709a"/>
+                                <circle cx="75" cy="80" r="4" fill="#fa709a"/>
+                                <circle cx="110" cy="60" r="4" fill="#fa709a"/>
+                                <circle cx="145" cy="90" r="4" fill="#fa709a"/>
+                                <circle cx="180" cy="50" r="4" fill="#fa709a"/>
+                                
+                                <text x="40" y="155" font-size="10" text-anchor="middle">Jaar 1</text>
+                                <text x="75" y="155" font-size="10" text-anchor="middle">Jaar 2</text>
+                                <text x="110" y="155" font-size="10" text-anchor="middle">Jaar 3</text>
+                                <text x="145" y="155" font-size="10" text-anchor="middle">Jaar 4</text>
+                                <text x="180" y="155" font-size="10" text-anchor="middle">Jaar 5</text>
+                                
+                                <text x="25" y="50" font-size="9">10</text>
+                                <text x="25" y="80" font-size="9">7</text>
+                                <text x="25" y="110" font-size="9">4</text>
+                                <text x="25" y="140" font-size="9">0</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> In welk jaar zijn de meeste leeuwen geboren?</p>
+                            <p><strong>Antwoord:</strong> Jaar 5 (hoogste punt op de lijn)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🔍 Informatie uit grafiek</h3>
+                            <p>Informatie uit de grafiek halen en vragen beantwoorden</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Vraag:</strong> In welk jaar zijn de minste leeuwen geboren?</p>
+                            <svg width="200" height="120" viewBox="0 0 200 120">
+                                <line x1="30" y1="15" x2="30" y2="100" stroke="#333" stroke-width="2"/>
+                                <line x1="30" y1="100" x2="180" y2="100" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="30,70 65,55 100,40 135,65 170,35" fill="none" stroke="#fa709a" stroke-width="3"/>
+                                
+                                <circle cx="30" cy="70" r="3" fill="#fa709a"/>
+                                <circle cx="65" cy="55" r="3" fill="#fa709a"/>
+                                <circle cx="100" cy="40" r="3" fill="#fa709a"/>
+                                <circle cx="135" cy="65" r="3" fill="#fa709a"/>
+                                <circle cx="170" cy="35" r="3" fill="#fa709a"/>
+                                
+                                <text x="30" y="112" font-size="8" text-anchor="middle">J1</text>
+                                <text x="65" y="112" font-size="8" text-anchor="middle">J2</text>
+                                <text x="100" y="112" font-size="8" text-anchor="middle">J3</text>
+                                <text x="135" y="112" font-size="8" text-anchor="middle">J4</text>
+                                <text x="170" y="112" font-size="8" text-anchor="middle">J5</text>
+                            </svg>
+                            <p><strong>Antwoord:</strong> Jaar 1 (laagste punt op de lijn)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>✨ Patronen ontwerpen</h3>
+                            <p>Patronen in getallenreeksen ontwerpen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Opdracht:</strong> Maak een patroon dat begint met 5 en steeds verdubbelt.</p>
+                            <p style="font-size: 1.3em; margin: 20px 0;">5 - 10 - 20 - 40 - 80</p>
+                            <p><strong>Vraag:</strong> Wat is het volgende getal?</p>
+                            <p><strong>Antwoord:</strong> 160 (80 × 2)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 6 -->
+        <div id="groep6" class="tab-content">
+            <h2 style="color: #30cfd0; margin-bottom: 20px;">Groep 6: Meerdere lijnen vergelijken</h2>
+            <div class="cards-grid groep6">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📊 Meervoudige lijngrafiek</h3>
+                            <p>Meervoudige lijngrafiek met 2 lijnen aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal klachten bij klantenservice</h4>
+                            <svg width="240" height="150" viewBox="0 0 240 150">
+                                <line x1="40" y1="20" x2="40" y2="130" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="130" x2="220" y2="130" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="40,90 85,100 130,80 175,95 220,70" fill="none" stroke="#4169e1" stroke-width="2"/>
+                                <polyline points="40,70 85,60 130,85 175,75 220,50" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+                                
+                                <text x="40" y="145" font-size="9" text-anchor="middle">Jan</text>
+                                <text x="85" y="145" font-size="9" text-anchor="middle">Feb</text>
+                                <text x="130" y="145" font-size="9" text-anchor="middle">Mrt</text>
+                                <text x="175" y="145" font-size="9" text-anchor="middle">Apr</text>
+                                <text x="220" y="145" font-size="9" text-anchor="middle">Mei</text>
+                                
+                                <rect x="50" y="5" width="10" height="10" fill="#4169e1"/>
+                                <text x="63" y="13" font-size="9">2020</text>
+                                
+                                <rect x="100" y="5" width="10" height="10" fill="#ff6b6b"/>
+                                <text x="113" y="13" font-size="9">2021</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> In welke maand waren er in 2021 de meeste klachten?</p>
+                            <p><strong>Antwoord:</strong> Maart (rode lijn heeft daar het hoogste punt)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🧩 Twee lijnen vergelijken</h3>
+                            <p>Twee lijnen vergelijken</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal neergelegde puzzelstukjes</h4>
+                            <svg width="240" height="150" viewBox="0 0 240 150">
+                                <line x1="40" y1="20" x2="40" y2="130" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="130" x2="220" y2="130" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="40,100 70,90 100,70 130,80 160,60 190,65 220,50" fill="none" stroke="#f093fb" stroke-width="2"/>
+                                <polyline points="40,80 70,85 100,95 130,75 160,90 190,70 220,85" fill="none" stroke="#30cfd0" stroke-width="2"/>
+                                
+                                <text x="40" y="145" font-size="8" text-anchor="middle">Ma</text>
+                                <text x="70" y="145" font-size="8" text-anchor="middle">Di</text>
+                                <text x="100" y="145" font-size="8" text-anchor="middle">Wo</text>
+                                <text x="130" y="145" font-size="8" text-anchor="middle">Do</text>
+                                <text x="160" y="145" font-size="8" text-anchor="middle">Vr</text>
+                                <text x="190" y="145" font-size="8" text-anchor="middle">Za</text>
+                                <text x="220" y="145" font-size="8" text-anchor="middle">Zo</text>
+                                
+                                <rect x="40" y="5" width="10" height="10" fill="#f093fb"/>
+                                <text x="53" y="13" font-size="9">Kinderen</text>
+                                
+                                <rect x="110" y="5" width="10" height="10" fill="#30cfd0"/>
+                                <text x="123" y="13" font-size="9">Volwassenen</text>
+                                
+                                <text x="25" y="70" font-size="8">200</text>
+                                <text x="25" y="100" font-size="8">100</text>
+                                <text x="25" y="130" font-size="8">0</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> Op welke dag hebben de kinderen meer puzzelstukjes gelegd dan volwassenen?</p>
+                            <p><strong>Antwoord:</strong> Woensdag (paarse lijn hoger dan blauwe)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📍 Waarden schatten</h3>
+                            <p>Waarden schatten tussen schaalstrepen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal verhuisde mensen</h4>
+                            <svg width="240" height="150" viewBox="0 0 240 150">
+                                <line x1="40" y1="20" x2="40" y2="130" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="130" x2="220" y2="130" stroke="#333" stroke-width="2"/>
+                                
+                                <line x1="35" y1="40" x2="40" y2="40" stroke="#333" stroke-width="1"/>
+                                <line x1="35" y1="70" x2="40" y2="70" stroke="#333" stroke-width="1"/>
+                                <line x1="35" y1="100" x2="40" y2="100" stroke="#333" stroke-width="1"/>
+                                
+                                <polyline points="70,55 130,75 190,50" fill="none" stroke="#ff9a56" stroke-width="2"/>
+                                <polyline points="70,85 130,65 190,80" fill="none" stroke="#4169e1" stroke-width="2"/>
+                                
+                                <circle cx="130" cy="75" r="5" fill="none" stroke="#ff9a56" stroke-width="2"/>
+                                
+                                <text x="70" y="145" font-size="9" text-anchor="middle">2020</text>
+                                <text x="130" y="145" font-size="9" text-anchor="middle">2021</text>
+                                <text x="190" y="145" font-size="9" text-anchor="middle">2022</text>
+                                
+                                <text x="20" y="43" font-size="8">3000</text>
+                                <text x="20" y="73" font-size="8">2000</text>
+                                <text x="20" y="103" font-size="8">1000</text>
+                                
+                                <rect x="50" y="5" width="10" height="10" fill="#ff9a56"/>
+                                <text x="63" y="13" font-size="9">Amsterdam</text>
+                                
+                                <rect x="130" y="5" width="10" height="10" fill="#4169e1"/>
+                                <text x="143" y="13" font-size="9">Rotterdam</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> Wat is de waarde van het omcirkelde punt?</p>
+                            <p><strong>Antwoord:</strong> Ongeveer 2500 (halverwege tussen 2000 en 3000)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🚲 Beelddiagram met waarden > 1</h3>
+                            <p>Beelddiagram met waarden > 1</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <p><strong>Legenda:</strong> 1 fiets 🚲 = 100 fietsen</p>
+                            <svg width="200" height="100" viewBox="0 0 200 100">
+                                <text x="10" y="30" font-size="20">🚲🚲🚲🚲</text>
+                                <text x="120" y="30" font-size="12">Amsterdam</text>
+                                
+                                <text x="10" y="60" font-size="20">🚲🚲</text>
+                                <text x="120" y="60" font-size="12">Utrecht</text>
+                                
+                                <text x="10" y="90" font-size="20">🚲🚲🚲</text>
+                                <text x="120" y="90" font-size="12">Rotterdam</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> Hoeveel fietsen zijn er in Amsterdam?</p>
+                            <p><strong>Antwoord:</strong> 400 fietsen (4 × 100)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 7 -->
+        <div id="groep7" class="tab-content">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Groep 7: Assenstelsels en formele taal</h2>
+            <div class="cards-grid groep7">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📐 Coördinaten in assenstelsel</h3>
+                            <p>Coördinaten aflezen in assenstelsel</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <svg width="200" height="180" viewBox="0 0 200 180">
+                                <line x1="30" y1="20" x2="30" y2="150" stroke="#333" stroke-width="2"/>
+                                <line x1="30" y1="150" x2="180" y2="150" stroke="#333" stroke-width="2"/>
+                                
+                                <line x1="30" y1="120" x2="180" y2="120" stroke="#ddd" stroke-width="1"/>
+                                <line x1="30" y1="90" x2="180" y2="90" stroke="#ddd" stroke-width="1"/>
+                                <line x1="30" y1="60" x2="180" y2="60" stroke="#ddd" stroke-width="1"/>
+                                <line x1="30" y1="30" x2="180" y2="30" stroke="#ddd" stroke-width="1"/>
+                                
+                                <line x1="60" y1="20" x2="60" y2="150" stroke="#ddd" stroke-width="1"/>
+                                <line x1="90" y1="20" x2="90" y2="150" stroke="#ddd" stroke-width="1"/>
+                                <line x1="120" y1="20" x2="120" y2="150" stroke="#ddd" stroke-width="1"/>
+                                <line x1="150" y1="20" x2="150" y2="150" stroke="#ddd" stroke-width="1"/>
+                                
+                                <circle cx="90" cy="60" r="5" fill="#ff6b6b"/>
+                                <text x="95" y="55" font-size="10" fill="#ff6b6b">A</text>
+                                
+                                <circle cx="150" cy="90" r="5" fill="#4ecdc4"/>
+                                <text x="155" y="85" font-size="10" fill="#4ecdc4">B</text>
+                                
+                                <text x="30" y="165" font-size="9" text-anchor="middle">0</text>
+                                <text x="60" y="165" font-size="9" text-anchor="middle">1</text>
+                                <text x="90" y="165" font-size="9" text-anchor="middle">2</text>
+                                <text x="120" y="165" font-size="9" text-anchor="middle">3</text>
+                                <text x="150" y="165" font-size="9" text-anchor="middle">4</text>
+                                
+                                <text x="15" y="150" font-size="9">0</text>
+                                <text x="15" y="120" font-size="9">1</text>
+                                <text x="15" y="90" font-size="9">2</text>
+                                <text x="15" y="60" font-size="9">3</text>
+                                <text x="15" y="30" font-size="9">4</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> Wat zijn de coördinaten van punt A en B?</p>
+                            <p><strong>Antwoord:</strong> A = (2, 3) en B = (4, 2)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>⚽ Punten per wedstrijd</h3>
+                            <p>Meervoudige lijngrafiek met 2 lijnen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Gescoorde punten per wedstrijd</h4>
+                            <svg width="240" height="160" viewBox="0 0 240 160">
+                                <line x1="40" y1="20" x2="40" y2="140" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="140" x2="220" y2="140" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="50,100 70,80 90,90 110,70 130,85 150,60 170,75 190,65" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+                                <polyline points="50,90 70,95 90,75 110,85 130,70 150,80 170,60 190,70" fill="none" stroke="#4ecdc4" stroke-width="2"/>
+                                
+                                <text x="50" y="153" font-size="7" text-anchor="middle">W1</text>
+                                <text x="70" y="153" font-size="7" text-anchor="middle">W2</text>
+                                <text x="90" y="153" font-size="7" text-anchor="middle">W3</text>
+                                <text x="110" y="153" font-size="7" text-anchor="middle">W4</text>
+                                <text x="130" y="153" font-size="7" text-anchor="middle">W5</text>
+                                <text x="150" y="153" font-size="7" text-anchor="middle">W6</text>
+                                <text x="170" y="153" font-size="7" text-anchor="middle">W7</text>
+                                <text x="190" y="153" font-size="7" text-anchor="middle">W8</text>
+                                
+                                <rect x="45" y="5" width="10" height="10" fill="#ff6b6b"/>
+                                <text x="58" y="13" font-size="9">Team 1</text>
+                                
+                                <rect x="110" y="5" width="10" height="10" fill="#4ecdc4"/>
+                                <text x="123" y="13" font-size="9">Team 2</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> Welk team scoorde het meest in wedstrijd 6?</p>
+                            <p><strong>Antwoord:</strong> Team 2 (groene lijn hoger)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>⭕ Cirkeldiagram aflezen</h3>
+                            <p>Cirkeldiagram aflezen</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Vrijetijdsbesteding</h4>
+                            <svg width="200" height="200" viewBox="0 0 200 200">
+                                <circle cx="100" cy="90" r="60" fill="none" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- Sport 35% (0° tot 126°) - GROOTSTE -->
+                                <path d="M 100 90 L 100 30 A 60 60 0 0 1 152 132 Z" fill="#ff6b6b"/>
+                                
+                                <!-- Gamen 25% (126° tot 216°) -->
+                                <path d="M 100 90 L 152 132 A 60 60 0 0 1 100 150 Z" fill="#4ecdc4"/>
+                                
+                                <!-- Lezen 15% (216° tot 270°) -->
+                                <path d="M 100 90 L 100 150 A 60 60 0 0 1 40 90 Z" fill="#f093fb"/>
+                                
+                                <!-- TV 15% (270° tot 324°) -->
+                                <path d="M 100 90 L 40 90 A 60 60 0 0 1 58 42 Z" fill="#ffd93d"/>
+                                
+                                <!-- Anders 10% (324° tot 360°) - KLEINSTE -->
+                                <path d="M 100 90 L 58 42 A 60 60 0 0 1 100 30 Z" fill="#a8edea"/>
+                                
+                                <!-- Legenda -->
+                                <rect x="10" y="160" width="10" height="10" fill="#ff6b6b"/>
+                                <text x="23" y="168" font-size="9" font-weight="bold">Sport (35%)</text>
+                                
+                                <rect x="90" y="160" width="10" height="10" fill="#4ecdc4"/>
+                                <text x="103" y="168" font-size="9">Gamen (25%)</text>
+                                
+                                <rect x="10" y="175" width="10" height="10" fill="#f093fb"/>
+                                <text x="23" y="183" font-size="9">Lezen (15%)</text>
+                                
+                                <rect x="90" y="175" width="10" height="10" fill="#ffd93d"/>
+                                <text x="103" y="183" font-size="9">TV (15%)</text>
+                                
+                                <rect x="10" y="190" width="10" height="10" fill="#a8edea"/>
+                                <text x="23" y="198" font-size="9">Anders (10%)</text>
+                            </svg>
+                            <p style="margin-top: 10px;"><strong>Vraag:</strong> Wat is de populairste activiteit?</p>
+                            <p><strong>Antwoord:</strong> Sport met 35% (duidelijk het grootste rode partje)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>📈 Formele wiskundetaal</h3>
+                            <p>Formele taal gebruiken (stijgen, dalen, toename)</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Voorbeeldsom</h4>
+                            <svg width="200" height="120" viewBox="0 0 200 120">
+                                <line x1="30" y1="20" x2="30" y2="100" stroke="#333" stroke-width="2"/>
+                                <line x1="30" y1="100" x2="180" y2="100" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="30,90 60,70 90,50 120,55 150,40 180,30" fill="none" stroke="#667eea" stroke-width="3"/>
+                            </svg>
+                            <p><strong>Opdracht:</strong> Beschrijf de trend in deze grafiek met de juiste wiskundige termen.</p>
+                            <p><strong>Antwoord:</strong> "De lijn <strong>stijgt</strong> eerst steil, vertoont een korte <strong>afname</strong>, en <strong>stijgt</strong> daarna verder. Er is sprake van een <strong>algemene toename</strong>."</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GROEP 8 -->
+        <div id="groep8" class="tab-content">
+            <h2 style="color: #ff9a56; margin-bottom: 20px;">Groep 8: Complexe analyses en trends</h2>
+            <div class="cards-grid groep8">
+                
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🌡️ Kromme lijn aflezen</h3>
+                            <p>Lijngrafiek met kromme lijn</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Gemiddelde temperatuur per maand</h4>
+                            <svg width="240" height="150" viewBox="0 0 240 150">
+                                <line x1="40" y1="20" x2="40" y2="130" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="130" x2="220" y2="130" stroke="#333" stroke-width="2"/>
+                                
+                                <path d="M 50,110 Q 70,100 90,70 Q 110,40 130,30 Q 150,40 170,70 Q 190,100 210,110" fill="none" stroke="#ff9a56" stroke-width="3"/>
+                                
+                                <circle cx="90" cy="70" r="5" fill="#4169e1"/>
+                                <circle cx="130" cy="30" r="5" fill="#ff6b6b"/>
+                                <circle cx="170" cy="70" r="5" fill="#4169e1"/>
+                                
+                                <text x="50" y="143" font-size="8" text-anchor="middle">Jan</text>
+                                <text x="70" y="143" font-size="8" text-anchor="middle">Feb</text>
+                                <text x="90" y="143" font-size="8" text-anchor="middle">Mrt</text>
+                                <text x="110" y="143" font-size="8" text-anchor="middle">Apr</text>
+                                <text x="130" y="143" font-size="8" text-anchor="middle">Mei</text>
+                                <text x="150" y="143" font-size="8" text-anchor="middle">Jun</text>
+                                <text x="170" y="143" font-size="8" text-anchor="middle">Jul</text>
+                                <text x="190" y="143" font-size="8" text-anchor="middle">Aug</text>
+                                <text x="210" y="143" font-size="8" text-anchor="middle">Sep</text>
+                                
+                                <text x="25" y="35" font-size="8">25°C</text>
+                                <text x="25" y="70" font-size="8">15°C</text>
+                                <text x="25" y="105" font-size="8">5°C</text>
+                                <text x="25" y="130" font-size="8">0°C</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> In welke 3 maanden is de temperatuur ongeveer gelijk?</p>
+                            <p><strong>Antwoord:</strong> Maart, juli en september hebben alle drie ongeveer 15°C (blauwe punten op dezelfde hoogte)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🍒 Kruisende lijnen</h3>
+                            <p>Kruisende lijnen interpreteren</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal geplukte vruchten</h4>
+                            <svg width="240" height="150" viewBox="0 0 240 150">
+                                <line x1="40" y1="20" x2="40" y2="130" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="130" x2="220" y2="130" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="60,90 100,70 140,60 180,50" fill="none" stroke="#dc143c" stroke-width="2"/>
+                                <polyline points="60,60 100,75 140,80 180,90" fill="none" stroke="#ff6b9d" stroke-width="2"/>
+                                
+                                <circle cx="85" cy="73" r="5" fill="yellow" stroke="#333" stroke-width="2"/>
+                                
+                                <text x="60" y="143" font-size="9" text-anchor="middle">Apr</text>
+                                <text x="100" y="143" font-size="9" text-anchor="middle">Mei</text>
+                                <text x="140" y="143" font-size="9" text-anchor="middle">Jun</text>
+                                <text x="180" y="143" font-size="9" text-anchor="middle">Jul</text>
+                                
+                                <text x="25" y="50" font-size="8">200</text>
+                                <text x="25" y="80" font-size="8">100</text>
+                                <text x="25" y="130" font-size="8">0</text>
+                                
+                                <rect x="50" y="5" width="10" height="10" fill="#dc143c"/>
+                                <text x="63" y="13" font-size="9">Kersen</text>
+                                
+                                <rect x="110" y="5" width="10" height="10" fill="#ff6b9d"/>
+                                <text x="123" y="13" font-size="9">Aardbeien</text>
+                            </svg>
+                            <p><strong>Vraag:</strong> In welke maand zijn evenveel kersen als aardbeien geplukt?</p>
+                            <p><strong>Antwoord:</strong> Mei (het kruispunt van beide lijnen)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🎢 Complexe grafiek analyseren</h3>
+                            <p>Complexe meervoudige grafiek</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal bezoekers in het pretpark</h4>
+                            <svg width="240" height="160" viewBox="0 0 240 160">
+                                <line x1="40" y1="20" x2="40" y2="140" stroke="#333" stroke-width="2"/>
+                                <line x1="40" y1="140" x2="220" y2="140" stroke="#333" stroke-width="2"/>
+                                
+                                <polyline points="50,100 70,90 90,70 110,85 130,60 150,75 170,50 190,65 210,45" fill="none" stroke="#4169e1" stroke-width="2"/>
+                                <polyline points="50,110 70,105 90,90 110,100 130,80 150,90 170,70 190,85 210,60" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+                                
+                                <text x="50" y="153" font-size="7" text-anchor="middle">W1</text>
+                                <text x="70" y="153" font-size="7" text-anchor="middle">W2</text>
+                                <text x="90" y="153" font-size="7" text-anchor="middle">W3</text>
+                                <text x="110" y="153" font-size="7" text-anchor="middle">W4</text>
+                                <text x="130" y="153" font-size="7" text-anchor="middle">W5</text>
+                                <text x="150" y="153" font-size="7" text-anchor="middle">W6</text>
+                                <text x="170" y="153" font-size="7" text-anchor="middle">W7</text>
+                                <text x="190" y="153" font-size="7" text-anchor="middle">W8</text>
+                                <text x="210" y="153" font-size="7" text-anchor="middle">W9</text>
+                                
+                                <text x="20" y="45" font-size="8">800</text>
+                                <text x="20" y="75" font-size="8">600</text>
+                                <text x="20" y="105" font-size="8">400</text>
+                                <text x="20" y="140" font-size="8">0</text>
+                                
+                                <rect x="50" y="5" width="10" height="10" fill="#4169e1"/>
+                                <text x="63" y="13" font-size="9">2021</text>
+                                
+                                <rect x="100" y="5" width="10" height="10" fill="#ff6b6b"/>
+                                <text x="113" y="13" font-size="9">2022</text>
+                            </svg>
+                            <p><strong>Statement:</strong> "In week 5 waren er meer bezoekers in 2022 dan in 2021"</p>
+                            <p><strong>Antwoord:</strong> Niet waar! In week 5 was 2021 hoger (blauw boven rood)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h3>🚉 Statements evalueren</h3>
+                            <p>Statements evalueren</p>
+                            <span class="flip-hint">Klik voor voorbeeld →</span>
+                        </div>
+                        <div class="card-back">
+                            <h4>Aantal mensen op het station</h4>
+                            <svg width="220" height="130" viewBox="0 0 220 130" style="margin: 10px 0;">
+                                <!-- Assen -->
+                                <line x1="30" y1="10" x2="30" y2="100" stroke="#333" stroke-width="2"/>
+                                <line x1="30" y1="100" x2="210" y2="100" stroke="#333" stroke-width="2"/>
+                                
+                                <!-- Hulplijnen -->
+                                <line x1="30" y1="40" x2="210" y2="40" stroke="#ddd" stroke-width="1"/>
+                                <line x1="30" y1="70" x2="210" y2="70" stroke="#ddd" stroke-width="1"/>
+                                
+                                <!-- Lijngrafiek -->
+                                <polyline points="40,95 60,80 80,50 100,45 120,60 140,90 160,85 180,75 200,80" 
+                                          fill="none" stroke="#30cfd0" stroke-width="3"/>
+                                
+                                <!-- Punten -->
+                                <circle cx="40" cy="95" r="3" fill="#30cfd0"/>
+                                <circle cx="60" cy="80" r="3" fill="#30cfd0"/>
+                                <circle cx="80" cy="50" r="3" fill="#30cfd0"/>
+                                <circle cx="100" cy="45" r="3" fill="#30cfd0"/>
+                                <circle cx="120" cy="60" r="3" fill="#30cfd0"/>
+                                <circle cx="140" cy="90" r="3" fill="#30cfd0"/>
+                                <circle cx="160" cy="85" r="3" fill="#30cfd0"/>
+                                <circle cx="180" cy="75" r="3" fill="#30cfd0"/>
+                                <circle cx="200" cy="80" r="3" fill="#30cfd0"/>
+                                
+                                <!-- X-as labels -->
+                                <text x="40" y="113" font-size="8" text-anchor="middle">6u</text>
+                                <text x="60" y="113" font-size="8" text-anchor="middle">8u</text>
+                                <text x="80" y="113" font-size="8" text-anchor="middle">10u</text>
+                                <text x="100" y="113" font-size="8" text-anchor="middle">12u</text>
+                                <text x="120" y="113" font-size="8" text-anchor="middle">14u</text>
+                                <text x="140" y="113" font-size="8" text-anchor="middle">16u</text>
+                                <text x="160" y="113" font-size="8" text-anchor="middle">18u</text>
+                                <text x="180" y="113" font-size="8" text-anchor="middle">20u</text>
+                                <text x="200" y="113" font-size="8" text-anchor="middle">22u</text>
+                                
+                                <!-- Y-as labels -->
+                                <text x="15" y="45" font-size="8">500</text>
+                                <text x="15" y="75" font-size="8">300</text>
+                                <text x="15" y="102" font-size="8">0</text>
+                            </svg>
+                            <p style="margin-top: 10px;"><strong>Evalueer de statements:</strong></p>
+                            <p style="font-size: 0.9em;">A) Om 12u is het het drukst ✓ <em>(waar)</em></p>
+                            <p style="font-size: 0.9em;">B) Na 16u neemt drukte toe ✗ <em>(niet waar)</em></p>
+                            <p style="font-size: 0.9em;">C) Van 6-12u is er toename ✓ <em>(waar)</em></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GRAFIEKEN -->
+        <div id="grafieken" class="tab-content">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Grafieksoorten</h2>
+            <p style="margin-bottom: 30px;">Klik op een tegel om meer te leren over elk type grafiek.</p>
+            
+            <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                
+                <!-- 1. Beelddiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>🖼️ Beelddiagram</h3>
+                            <svg width="120" height="70" viewBox="0 0 120 70" style="margin: 15px 0;">
+                                <text x="10" y="25" font-size="20">🚗</text>
+                                <text x="35" y="25" font-size="20">🚗</text>
+                                <text x="60" y="25" font-size="20">🚗</text>
+                                <text x="85" y="25" font-size="20">🚗</text>
+                                
+                                <text x="10" y="50" font-size="20">🚙</text>
+                                <text x="35" y="50" font-size="20">🚙</text>
+                                <text x="60" y="50" font-size="20">🚙</text>
+                                
+                                <text x="10" y="70" font-size="8" fill="white">= 10 auto's</text>
+                            </svg>
+                            <p>Pictogram</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>🖼️ Beelddiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Geeft visuele gegevens weer via afbeeldingen of symbolen.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Makkelijk te begrijpen voor breed publiek. Bijvoorbeeld: 1 fiets = 100 fietsen.</p>
+                            <p><strong>Voorbeeld:</strong><br>Aantal verkochte auto's per merk, waarbij elke auto-afbeelding 50 auto's voorstelt.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Cirkeldiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>🥧 Cirkeldiagram</h3>
+                            <svg width="100" height="100" viewBox="0 0 100 100" style="margin: 10px 0;">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="2"/>
+                                
+                                <!-- 40% -->
+                                <path d="M 50 50 L 50 10 A 40 40 0 0 1 84 34 Z" fill="rgba(255,255,255,0.9)"/>
+                                <!-- 30% -->
+                                <path d="M 50 50 L 84 34 A 40 40 0 0 1 84 66 Z" fill="rgba(255,255,255,0.7)"/>
+                                <!-- 20% -->
+                                <path d="M 50 50 L 84 66 A 40 40 0 0 1 50 90 Z" fill="rgba(255,255,255,0.5)"/>
+                                <!-- 10% -->
+                                <path d="M 50 50 L 50 90 A 40 40 0 0 1 50 10 Z" fill="rgba(255,255,255,0.3)"/>
+                            </svg>
+                            <p>Taartdiagram</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>🥧 Cirkeldiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Toont verhoudingen binnen een geheel (altijd 100%).</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Vergelijkt cijfers die geen onderling verband hebben. Geschikt voor percentages en aandelen.</p>
+                            <p><strong>Voorbeeld:</strong><br>Verdeling favoriete kleuren in de klas: rood 30%, blauw 25%, groen 20%, geel 15%, anders 10%.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Staafdiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>📊 Staafdiagram</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Assen -->
+                                <line x1="15" y1="10" x2="15" y2="70" stroke="white" stroke-width="2"/>
+                                <line x1="15" y1="70" x2="110" y2="70" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Staven -->
+                                <rect x="25" y="30" width="15" height="40" fill="rgba(255,255,255,0.9)"/>
+                                <rect x="50" y="20" width="15" height="50" fill="rgba(255,255,255,0.9)"/>
+                                <rect x="75" y="40" width="15" height="30" fill="rgba(255,255,255,0.9)"/>
+                            </svg>
+                            <p>Staafgrafiek</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>📊 Staafdiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Vergelijkt discrete categorieën of groepen met staven.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Geschikt voor absolute aantallen. Staven staan los van elkaar.</p>
+                            <p><strong>Voorbeeld:</strong><br>Aantal leerlingen per jaargroep: groep 6 heeft 28 leerlingen, groep 7 heeft 32, groep 8 heeft 25.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Lijndiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>📈 Lijndiagram</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Assen -->
+                                <line x1="15" y1="10" x2="15" y2="70" stroke="white" stroke-width="2"/>
+                                <line x1="15" y1="70" x2="110" y2="70" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Lijn -->
+                                <polyline points="15,60 35,50 55,30 75,40 95,20" 
+                                          fill="none" stroke="white" stroke-width="3"/>
+                                
+                                <!-- Punten -->
+                                <circle cx="15" cy="60" r="3" fill="white"/>
+                                <circle cx="35" cy="50" r="3" fill="white"/>
+                                <circle cx="55" cy="30" r="3" fill="white"/>
+                                <circle cx="75" cy="40" r="3" fill="white"/>
+                                <circle cx="95" cy="20" r="3" fill="white"/>
+                            </svg>
+                            <p>Lijngrafiek</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>📈 Lijndiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Toont relaties tussen gegevens over tijd met een doorlopende lijn.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Geschikt voor voorspellingen. Brengt continue processen in beeld. Zowel x- als y-waarden zijn continu.</p>
+                            <p><strong>Voorbeeld:</strong><br>Temperatuur door het jaar: januari 3°C, april 12°C, juli 22°C, oktober 14°C.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Histogram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>📉 Histogram</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Assen -->
+                                <line x1="15" y1="10" x2="15" y2="70" stroke="white" stroke-width="2"/>
+                                <line x1="15" y1="70" x2="110" y2="70" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Aaneengesloten staven (geen ruimte ertussen) -->
+                                <rect x="15" y="50" width="18" height="20" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="1"/>
+                                <rect x="33" y="35" width="18" height="35" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="1"/>
+                                <rect x="51" y="20" width="18" height="50" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="1"/>
+                                <rect x="69" y="30" width="18" height="40" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="1"/>
+                                <rect x="87" y="45" width="18" height="25" fill="rgba(255,255,255,0.9)" stroke="white" stroke-width="1"/>
+                            </svg>
+                            <p>Frequentieverdeling</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>📉 Histogram</h4>
+                            <p><strong>Wat is het?</strong><br>Toont frequentieverdeling met aansluitende staven.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Bij doorlopende schaal. X-as waarden moeten continu zijn. Staven staan tegen elkaar aan (geen tussenruimte).</p>
+                            <p><strong>Voorbeeld:</strong><br>Verdeling van cijfers: 5-6 (3 leerlingen), 6-7 (8 leerlingen), 7-8 (12 leerlingen), 8-9 (5 leerlingen).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Puntenwolk -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>📍 Puntenwolk</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Assen -->
+                                <line x1="15" y1="10" x2="15" y2="70" stroke="white" stroke-width="2"/>
+                                <line x1="15" y1="70" x2="110" y2="70" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Punten -->
+                                <circle cx="20" cy="60" r="3" fill="white"/>
+                                <circle cx="25" cy="55" r="3" fill="white"/>
+                                <circle cx="32" cy="52" r="3" fill="white"/>
+                                <circle cx="38" cy="48" r="3" fill="white"/>
+                                <circle cx="45" cy="50" r="3" fill="white"/>
+                                <circle cx="52" cy="42" r="3" fill="white"/>
+                                <circle cx="58" cy="38" r="3" fill="white"/>
+                                <circle cx="65" cy="35" r="3" fill="white"/>
+                                <circle cx="72" cy="32" r="3" fill="white"/>
+                                <circle cx="78" cy="28" r="3" fill="white"/>
+                                <circle cx="85" cy="25" r="3" fill="white"/>
+                                <circle cx="92" cy="22" r="3" fill="white"/>
+                                <circle cx="98" cy="18" r="3" fill="white"/>
+                            </svg>
+                            <p>Spreidingsdiagram</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>📍 Puntenwolk</h4>
+                            <p><strong>Wat is het?</strong><br>Weergave van puntenparen in een assenstelsel.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Toont mogelijk verband tussen twee variabelen. Geschikt voor het zichtbaar maken van correlaties.</p>
+                            <p><strong>Voorbeeld:</strong><br>Relatie tussen studietijd (uren) en cijfer: meer studeren geeft vaak hogere cijfers.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Steelbladdiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>🌿 Steelbladdiagram</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Verticale scheidingslijn -->
+                                <line x1="50" y1="15" x2="50" y2="70" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Stelen (links) -->
+                                <text x="40" y="30" font-size="14" fill="white" text-anchor="end">4</text>
+                                <text x="40" y="45" font-size="14" fill="white" text-anchor="end">5</text>
+                                <text x="40" y="60" font-size="14" fill="white" text-anchor="end">6</text>
+                                
+                                <!-- Bladeren (rechts) -->
+                                <text x="55" y="30" font-size="12" fill="white">5 7 8</text>
+                                <text x="55" y="45" font-size="12" fill="white">2 4 8 9</text>
+                                <text x="55" y="60" font-size="12" fill="white">1 3 5</text>
+                            </svg>
+                            <p>Stem-and-leaf</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>🌿 Steelbladdiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Combinatie van tabel, staafdiagram en histogram.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Bruikbaar bij zowel discrete als continue gegevens. Behoudt de originele data.</p>
+                            <p><strong>Voorbeeld:</strong><br>Scores: 45, 47, 52, 58, 61, 63 worden genoteerd als stelen (4, 5, 6) met bladeren (5,7 | 2,8 | 1,3).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Boxplot -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>📦 Boxplot</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- As -->
+                                <line x1="20" y1="40" x2="110" y2="40" stroke="white" stroke-width="1"/>
+                                
+                                <!-- Linker whisker -->
+                                <line x1="25" y1="35" x2="25" y2="45" stroke="white" stroke-width="2"/>
+                                <line x1="25" y1="40" x2="45" y2="40" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Box -->
+                                <rect x="45" y="25" width="40" height="30" fill="none" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Mediaan -->
+                                <line x1="65" y1="25" x2="65" y2="55" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Rechter whisker -->
+                                <line x1="85" y1="40" x2="105" y2="40" stroke="white" stroke-width="2"/>
+                                <line x1="105" y1="35" x2="105" y2="45" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Labels -->
+                                <text x="25" y="62" font-size="8" fill="white" text-anchor="middle">min</text>
+                                <text x="45" y="62" font-size="8" fill="white" text-anchor="middle">Q1</text>
+                                <text x="65" y="62" font-size="8" fill="white" text-anchor="middle">Q2</text>
+                                <text x="85" y="62" font-size="8" fill="white" text-anchor="middle">Q3</text>
+                                <text x="105" y="62" font-size="8" fill="white" text-anchor="middle">max</text>
+                            </svg>
+                            <p>Snorredoos</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>📦 Boxplot</h4>
+                            <p><strong>Wat is het?</strong><br>Grafische weergave van vijf kenmerkende getallen: laagste waarde, eerste kwartiel (25%), mediaan (50%), derde kwartiel (75%), hoogste waarde.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Toont de spreiding van data overzichtelijk.</p>
+                            <p><strong>Voorbeeld:</strong><br>Testresultaten: min=45, Q1=62, mediaan=70, Q3=78, max=95.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Blokdiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>🏢 Blokdiagram</h3>
+                            <svg width="120" height="80" viewBox="0 0 120 80" style="margin: 10px 0;">
+                                <!-- Top blok -->
+                                <rect x="35" y="10" width="50" height="15" fill="white" stroke="white" stroke-width="2" rx="3"/>
+                                <text x="60" y="20" font-size="10" fill="#667eea" text-anchor="middle" font-weight="bold">Directeur</text>
+                                
+                                <!-- Lijn omlaag -->
+                                <line x1="60" y1="25" x2="60" y2="35" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Horizontale lijn -->
+                                <line x1="20" y1="35" x2="100" y2="35" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Lijnen omlaag naar teams -->
+                                <line x1="30" y1="35" x2="30" y2="45" stroke="white" stroke-width="2"/>
+                                <line x1="60" y1="35" x2="60" y2="45" stroke="white" stroke-width="2"/>
+                                <line x1="90" y1="35" x2="90" y2="45" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Team blokken -->
+                                <rect x="10" y="45" width="40" height="12" fill="white" stroke="white" stroke-width="1" rx="2"/>
+                                <text x="30" y="53" font-size="8" fill="#667eea" text-anchor="middle">Team A</text>
+                                
+                                <rect x="55" y="45" width="40" height="12" fill="white" stroke="white" stroke-width="1" rx="2"/>
+                                <text x="75" y="53" font-size="8" fill="#667eea" text-anchor="middle">Team B</text>
+                            </svg>
+                            <p>Organogram</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>🏢 Blokdiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Geeft representatie van processen, systemen of toestanden.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Toont structuur en hiërarchie in organisaties.</p>
+                            <p><strong>Voorbeeld:</strong><br>Organigram van een school: directeur → teamleiders → docenten → leerlingen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Stroomdiagram -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3>🔄 Stroomdiagram</h3>
+                            <svg width="110" height="85" viewBox="0 0 110 85" style="margin: 8px 0;">
+                                <!-- Start ovaal -->
+                                <ellipse cx="55" cy="12" rx="35" ry="10" fill="white" stroke="white" stroke-width="2"/>
+                                <text x="55" y="15" font-size="9" fill="#667eea" text-anchor="middle" font-weight="bold">Start</text>
+                                
+                                <!-- Pijl omlaag -->
+                                <line x1="55" y1="22" x2="55" y2="32" stroke="white" stroke-width="2"/>
+                                <polygon points="55,32 52,28 58,28" fill="white"/>
+                                
+                                <!-- Beslissing ruit -->
+                                <path d="M 55 32 L 85 47 L 55 62 L 25 47 Z" fill="white" stroke="white" stroke-width="2"/>
+                                <text x="55" y="45" font-size="7" fill="#667eea" text-anchor="middle">Even</text>
+                                <text x="55" y="53" font-size="7" fill="#667eea" text-anchor="middle">getal?</text>
+                                
+                                <!-- JA label en pijl rechts -->
+                                <text x="90" y="45" font-size="8" fill="white" font-weight="bold">JA</text>
+                                <line x1="85" y1="47" x2="100" y2="47" stroke="white" stroke-width="2"/>
+                                <polygon points="100,47 96,44 96,50" fill="white"/>
+                                
+                                <!-- NEE label en pijl onder -->
+                                <text x="60" y="68" font-size="8" fill="white" font-weight="bold">NEE</text>
+                                <line x1="55" y1="62" x2="55" y2="75" stroke="white" stroke-width="2"/>
+                                <polygon points="55,75 52,71 58,71" fill="white"/>
+                                
+                                <!-- Actie rechthoek rechts -->
+                                <rect x="100" y="40" width="8" height="14" fill="white" stroke="white" stroke-width="1"/>
+                                
+                                <!-- Actie rechthoek onder -->
+                                <rect x="45" y="75" width="20" height="8" fill="white" stroke="white" stroke-width="1"/>
+                            </svg>
+                            <p>Flowchart</p>
+                            <span class="flip-hint">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #667eea;">
+                            <h4>🔄 Stroomdiagram</h4>
+                            <p><strong>Wat is het?</strong><br>Geeft een proces weer met beslismomenten en handelingen.</p>
+                            <p><strong>Wanneer gebruiken?</strong><br>Verschilt van blokdiagram door focus op procesverloop in plaats van structuur.</p>
+                            <p><strong>Voorbeeld:</strong><br>Stappenplan: "Is getal deelbaar door 3?" → JA: deel door 3 → NEE: ga naar volgend getal.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LEERPRINCIPES -->
+        <div id="leerprincipes" class="tab-content">
+            <h2 style="color: #ffd93d; margin-bottom: 20px;">Leerprincipes Realistisch Rekenen-Wiskunde</h2>
+            
+            <div style="background: #fffbf0; padding: 25px; border-radius: 15px; margin-bottom: 30px; border-left: 5px solid #ffd93d;">
+                <h3 style="color: #333; margin-bottom: 15px;">Vijf onderwijsleerprincipes van realistisch rekenen</h3>
+                <p style="color: #555; line-height: 1.8; margin-bottom: 15px;">
+                    Marc van Zanten (2011) beschrijft vijf kernprincipes voor realistisch rekenen-wiskunde die effectief zijn voor het onderwijzen van verbanden:
+                </p>
+                <ol style="color: #555; line-height: 1.8; margin-left: 20px;">
+                    <li><strong>Mathematiseren vanuit betekenisvolle realiteit</strong></li>
+                    <li><strong>Modelleren en formaliseren: drie niveaus in verbanden</strong></li>
+                    <li><strong>Ruimte voor eigen inbreng</strong></li>
+                    <li><strong>Interactie</strong></li>
+                    <li><strong>Reflectie en verstrengeling van leerlijnen</strong></li>
+                </ol>
+            </div>
+
+            <p style="margin-bottom: 30px; font-style: italic;">💡 Klik op een tegel om meer te leren over elk leerprincipe.</p>
+            
+            <div class="cards-grid leerprincipes-grid">
+                
+                <!-- 1. Mathematiseren vanuit betekenisvolle realiteit -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);">
+                            <h3>🎯 Mathematiseren vanuit betekenisvolle realiteit</h3>
+                            <span class="flip-hint" style="color: #333;">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #ffd93d;">
+                            <h4 style="color: #f9a825;">🎯 Mathematiseren vanuit betekenisvolle realiteit</h4>
+                            <p style="text-align: left; font-size: 0.95em; line-height: 1.7; margin-top: 15px;">
+                                Begin met herkenbare situaties uit de leefwereld van kinderen waarin zij relaties tussen grootheden kunnen ervaren.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Modelleren en formaliseren -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);">
+                            <h3>🔄 Modelleren en formaliseren: drie niveaus in verbanden</h3>
+                            <span class="flip-hint" style="color: #333;">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #ffd93d;">
+                            <h4 style="color: #f9a825;">🔄 Modelleren en formaliseren</h4>
+                            <p style="text-align: left; font-size: 0.95em; line-height: 1.7; margin-top: 15px;">
+                                Deze principes vormen samen drie didactische niveaus: <strong>informeel, semiformeel en formeel</strong>. In het basisonderwijs worden deze niveaus ook wel <strong>concreet, schematisch en abstract</strong> genoemd.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Ruimte voor eigen inbreng -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);">
+                            <h3>🧩 Ruimte voor eigen inbreng</h3>
+                            <span class="flip-hint" style="color: #333;">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #ffd93d;">
+                            <h4 style="color: #f9a825;">🧩 Ruimte voor eigen inbreng</h4>
+                            <p style="text-align: left; font-size: 0.95em; line-height: 1.7; margin-top: 15px;">
+                                Leerlingen ontdekken zelf verbanden en patronen. Zij kiezen verschillende strategieën om relaties weer te geven.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Interactie -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);">
+                            <h3>💭 Interactie</h3>
+                            <span class="flip-hint" style="color: #333;">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #ffd93d;">
+                            <h4 style="color: #f9a825;">💭 Interactie</h4>
+                            <p style="text-align: left; font-size: 0.95em; line-height: 1.7; margin-top: 15px;">
+                                Kinderen stimuleren elkaar bij het zoeken naar oplossingen. Terwijl ze met elkaar praten over het probleem en de oplossing, denken ze actief na en komen tot zelfbedachte oplossingen.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Reflectie en verstrengeling van leerlijnen -->
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front" style="background: linear-gradient(135deg, #ffd93d 0%, #f9a825 100%);">
+                            <h3>🏗️ Reflectie en verstrengeling van leerlijnen</h3>
+                            <span class="flip-hint" style="color: #333;">Klik voor uitleg →</span>
+                        </div>
+                        <div class="card-back" style="border-color: #ffd93d;">
+                            <h4 style="color: #f9a825;">🏗️ Reflectie en verstrengeling van leerlijnen</h4>
+                            <p style="text-align: left; font-size: 0.95em; line-height: 1.7; margin-top: 15px;">
+                                Verbanden zijn geschikt voor verstrengeling met andere rekendomeinen en soms met andere schoolvakken. Door reflectie ontwikkelen kinderen zelfvertrouwen bij rekenen.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- LEERLINGENWERK -->
+        <div id="leerlingenwerk" class="tab-content">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Leerlingenwerk</h2>
+            <p style="margin-bottom: 30px;">Klik op een foto hieronder om deze groter te bekijken.</p>
+            
+            <!-- Grote foto display -->
+            <div id="photoDisplay" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto 40px; background: #f8f9fa; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <img id="mainPhoto" src="images/foto1.jpg" alt="Leerlingenwerk" style="width: 100%; height: auto; display: block;">
+                <div id="photoCaption" style="position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.7); color: white; padding: 8px 15px; border-radius: 5px; font-size: 0.9em;">
+                    Tekst foto 1
+                </div>
+            </div>
+
+            <!-- Thumbnail navigatie -->
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 900px; margin: 0 auto;">
+                
+                <!-- 
+                    INSTRUCTIE VOOR HET TOEVOEGEN VAN FOTO 6, 7, 8:
+                    
+                    1. Kopieer een van de onderstaande <div class="photo-thumb"> blokken
+                    2. Pas het onclick attribuut aan:
+                       - Verander de foto URL: 'images/foto6.jpg'
+                       - Verander de tekst: 'Tekst foto 6'
+                    3. Pas de style aan voor de juiste verhouding:
+                       - Landscape (horizontaal): width: 180px; height: 120px;
+                       - Portrait (verticaal): width: 120px; height: 180px;
+                       - Square (vierkant): width: 150px; height: 150px;
+                    4. Pas de background-image aan: url('images/foto6.jpg')
+                    
+                    Voorbeeld voor foto 6 (landscape):
+                    <div class="photo-thumb" 
+                         onclick="changePhoto('images/foto6.jpg', 'Tekst foto 6')"
+                         style="width: 180px; height: 120px; background-image: url('images/foto6.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    </div>
+                -->
+                
+                <!-- Foto 1 - Landscape voorbeeld -->
+                <div class="photo-thumb" 
+                     onclick="changePhoto('images/foto1.jpg', 'Tekst foto 1')"
+                     style="width: 180px; height: 120px; background-image: url('images/foto1.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+
+                <!-- Foto 2 - Portrait voorbeeld -->
+                <div class="photo-thumb" 
+                     onclick="changePhoto('images/foto2.jpg', 'Tekst foto 2')"
+                     style="width: 120px; height: 180px; background-image: url('images/foto2.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+
+                <!-- Foto 3 - Square voorbeeld -->
+                <div class="photo-thumb" 
+                     onclick="changePhoto('images/foto3.jpg', 'Tekst foto 3')"
+                     style="width: 150px; height: 150px; background-image: url('images/foto3.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+
+                <!-- Foto 4 - Landscape voorbeeld -->
+                <div class="photo-thumb" 
+                     onclick="changePhoto('images/foto4.jpg', 'Tekst foto 4')"
+                     style="width: 180px; height: 120px; background-image: url('images/foto4.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+
+                <!-- Foto 5 - Portrait voorbeeld -->
+                <div class="photo-thumb" 
+                     onclick="changePhoto('images/foto5.jpg', 'Tekst foto 5')"
+                     style="width: 120px; height: 180px; background-image: url('images/foto5.jpg'); background-size: cover; background-position: center; border-radius: 10px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BRONNEN -->
+        <div id="bronnen" class="tab-content">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Bronnen</h2>
+            <p style="margin-bottom: 30px;">Klik op een bron om het document te openen.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                
+                <a href="https://www.slo.nl/publish/pages/14513/inhoudslijn-po-rekenenwiskunde_verbanden12-2019.pdf" 
+                   target="_blank" 
+                   class="source-tile"
+                   style="display: block; text-decoration: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 2.5em;">📄</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 8px; font-size: 1.2em;">SLO Inhoudslijn Verbanden</h3>
+                            <p style="opacity: 0.9; margin-bottom: 5px; font-size: 0.95em;">SLO. (2019). <em>Inhoudslijn PO – Rekenen-wiskunde: Verbanden.</em></p>
+                            <p style="opacity: 0.7; font-size: 0.85em;">www.slo.nl</p>
+                        </div>
+                        <div style="font-size: 1.5em;">→</div>
+                    </div>
+                </a>
+
+                <a href="https://www.slo.nl/@4587/tussendoelen-rekenen/" 
+                   target="_blank" 
+                   class="source-tile"
+                   style="display: block; text-decoration: none; background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 2.5em;">🎯</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 8px; font-size: 1.2em;">SLO Tussendoelen Rekenen-Wiskunde</h3>
+                            <p style="opacity: 0.9; margin-bottom: 5px; font-size: 0.95em;">SLO. (2020, 16 januari). <em>Tussendoelen rekenen-wiskunde voor het primair onderwijs: Uitwerkingen van rekendoelen voor groep 2 tot en met 8 op weg naar streefniveau 1S.</em></p>
+                            <p style="opacity: 0.7; font-size: 0.85em;">www.slo.nl</p>
+                        </div>
+                        <div style="font-size: 1.5em;">→</div>
+                    </div>
+                </a>
+
+                <a href="https://www.slo.nl/@24538/kerndoelen-nederlands-rekenen-wiskunde/" 
+                   target="_blank" 
+                   class="source-tile"
+                   style="display: block; text-decoration: none; background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); color: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 2.5em;">⭐</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 8px; font-size: 1.2em;">SLO Functionele Kerndoelen</h3>
+                            <p style="opacity: 0.9; margin-bottom: 5px; font-size: 0.95em;">SLO. (2025, april). <em>Functionele kerndoelen Nederlands en rekenen en wiskunde: Definitief concept.</em></p>
+                            <p style="opacity: 0.7; font-size: 0.85em;">www.slo.nl</p>
+                        </div>
+                        <div style="font-size: 1.5em;">→</div>
+                    </div>
+                </a>
+
+                <a href="https://www.boom.nl/hoger-onderwijs/100-19040_Rekenen-en-wiskunde-uitgelegd" 
+                   target="_blank" 
+                   class="source-tile"
+                   style="display: block; text-decoration: none; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 2.5em;">📖</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 8px; font-size: 1.2em;">Rekenen en wiskunde uitgelegd</h3>
+                            <p style="opacity: 0.9; margin-bottom: 5px; font-size: 0.95em;">Van Schaik, M. A. (2018). <em>Rekenen + wiskunde uitgelegd. Kennisbasis voor leerkrachten basisonderwijs</em> (3e, herziene druk). Bussum: Uitgeverij Coutinho.</p>
+                            <p style="opacity: 0.7; font-size: 0.85em;">boom.nl</p>
+                        </div>
+                        <div style="font-size: 1.5em;">→</div>
+                    </div>
+                </a>
+
+                <a href="https://www.volgens-bartjens.nl/documenten/archief/bartjens/pp_34_12_-_17_merwijk_het_kanaal_nummer_142.pdf" 
+                   target="_blank" 
+                   class="source-tile"
+                   style="display: block; text-decoration: none; background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%); color: white; padding: 25px 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 2.5em;">📝</div>
+                        <div style="flex: 1;">
+                            <h3 style="margin-bottom: 8px; font-size: 1.2em;">De rekentoets halen in het vmbo</h3>
+                            <p style="opacity: 0.9; margin-bottom: 5px; font-size: 0.95em;">Van Merwijk, F., & Lek, A. (2015). De rekentoets halen in het vmbo? Zeker weten! <em>Reken-wiskundeonderwijs: Onderzoek, Ontwikkeling, Praktijk, 34,</em> 12-17.</p>
+                            <p style="opacity: 0.7; font-size: 0.85em;">volgens-bartjens.nl</p>
+                        </div>
+                        <div style="font-size: 1.5em;">→</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all buttons
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            // Show current tab and add active class to button
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function changePhoto(photoUrl, caption) {
+            document.getElementById('mainPhoto').src = photoUrl;
+            document.getElementById('photoCaption').textContent = caption;
+        }
+    </script>
+</body>
+</html>
